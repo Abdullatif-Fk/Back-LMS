@@ -8,16 +8,13 @@ use App\Models\Students;
 use App\Models\Sections;
 class Classes extends Model
 {
+    protected $table='Classes';
     use HasFactory;
 
     protected $fillable = [
         'name'
     ];
 
-    public function students()
-    {
-        return $this->hasMany(Students::class, 'class_id','id');
-    }
 
     public function sections()
     {

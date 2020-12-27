@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Classes;
+use App\Models\Students;
+
 
 class Sections extends Model
 {
+    protected $table='Sections';
     use HasFactory;
 
     protected $fillable = [
@@ -19,4 +22,10 @@ class Sections extends Model
     {
         return $this->belongsTo(Classes::class,'class_id','id');
     }
+
+    public function students()
+    {
+        return $this->hasMany(Students::class, 'class_id','id');
+    }
 }
+
