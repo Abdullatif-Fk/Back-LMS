@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminsController;
+use App\Http\Controllers\SectionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/Admins',[AdminsController::class, 'index']);
+
+Route::get('/Section',[SectionsController::class, 'index']);
+
+
