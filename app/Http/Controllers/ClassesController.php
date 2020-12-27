@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Admins;
 
-
-class AdminsController extends Controller
+class ClassesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,11 +13,7 @@ class AdminsController extends Controller
      */
     public function index()
     {
-      return response()->json([
-        'status' => '200',
-        'message' => Admins::all(),
-    ]);
-
+        //
     }
 
     /**
@@ -88,5 +82,3 @@ class AdminsController extends Controller
         //
     }
 }
-
-

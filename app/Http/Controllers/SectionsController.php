@@ -1,12 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Sections;
+use App\Models\Classes;
+use App\Models\Students;
+use App\Models\Attendance;
+use App\Models\Students_Attendances;
+
+
 
 use Illuminate\Http\Request;
-use App\Models\Admins;
 
-
-class AdminsController extends Controller
+class SectionsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,11 +20,14 @@ class AdminsController extends Controller
      */
     public function index()
     {
-      return response()->json([
-        'status' => '200',
-        'message' => Admins::all(),
-    ]);
-
+        // return Sections::with('classes')->get();
+        // return Classes::with('sections')->get();
+        // return Classes::with('students')->get();
+        //return Students::with('classes')->get();
+        //return Attendance::with('students')->get();
+        //return Students::with('attendance')->get();
+        return Students_Attendances::all();
+        
     }
 
     /**
@@ -88,5 +96,3 @@ class AdminsController extends Controller
         //
     }
 }
-
-
