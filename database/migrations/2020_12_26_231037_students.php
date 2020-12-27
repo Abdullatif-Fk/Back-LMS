@@ -21,7 +21,7 @@ class Students extends Migration
             $table->string('password');
             $table->string("phone_number");
             $table->string("picture");
-            $table->string('class_id');
+            $table->string('section_id');
         });
     }
 

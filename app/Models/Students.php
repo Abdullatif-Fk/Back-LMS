@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Classes;
+use App\Models\Sections;
 
 use App\Models\Attendance;
 
@@ -20,15 +20,15 @@ class Students extends Model
         'password',
         'phone_number',
         'picture',
-        'class_id'
+        'section_id'
     ];
     public function attendance()
     {
         return $this->belongsToMany(Attendance::class, 'Students_Attendances','student_id','attendance_id');
     }
-    public function classes()
+    public function Sections()
     {
-        return $this->belongsTo(Classes::class,'class_id','id');
+        return $this->belongsTo(Sections::class,'sections_id','id');
     }
  
 }
