@@ -14,6 +14,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 use Illuminate\Http\Request;
 
+
+
 class Fetch_Students extends Controller
 {
     /**
@@ -30,6 +32,7 @@ class Fetch_Students extends Controller
     
         $student_info=[];
         $student_name=$student->first_name." ".$student->last_name;
+        $student_info["id"]=$student->id;
         $student_info["student_name"]=$student_name;
         $section_id= $student->section_id;
         $class_id=Sections::where('id',$section_id)->first()->class_id;
@@ -38,7 +41,11 @@ class Fetch_Students extends Controller
         array_push($students_info,$student_info);
         }
 
-        return $this->paginate($students_info);
+        return response()->json([
+           'status'=> 200,
+           'message'=>$this->paginate($students_info)
+        ], 200); 
+        
       
          //return Sections::with('classes')->get();
         //return Classes::with('sections')->get();
