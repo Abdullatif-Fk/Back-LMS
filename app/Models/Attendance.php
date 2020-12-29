@@ -9,6 +9,7 @@ use App\Models\Students;
 class Attendance extends Model
 {
     protected $table='Attendance';
+    public $timestamps = false;
     use HasFactory;
 
     protected $fillable = [
