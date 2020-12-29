@@ -9,6 +9,7 @@ use App\Models\Sections;
 class Classes extends Model
 {
     protected $table='Classes';
+    public $timestamps = false;
     use HasFactory;
 
     protected $fillable = [

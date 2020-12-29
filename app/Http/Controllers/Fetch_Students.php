@@ -24,7 +24,7 @@ class Fetch_Students extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {  
+    {   
         $students_info=[];
         $students = Students::with('Sections')->get();
         foreach ($students as $student)
@@ -35,7 +35,15 @@ class Fetch_Students extends Controller
         $student_info["id"]=$student->id;
         $student_info["student_name"]=$student_name;
         $section_id= $student->section_id;
-        $class_id=Sections::where('id',$section_id)->first()->class_id;
+
+        $class=Sections::where('id',$section_id);
+        if ($class->count()>0)
+            $class_id=$class->first()->class_id;
+        else
+            return response()->json([
+                'status'=> 400,
+                'message'=>"Couldn't find student"
+            ], 200);  
         $student_info["section_id"]=$section_id;
         $student_info["class_id"]=$class_id;
         array_push($students_info,$student_info);
@@ -123,14 +131,5 @@ class Fetch_Students extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+
 }

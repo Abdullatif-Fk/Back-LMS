@@ -11,6 +11,7 @@ use App\Models\Students;
 class Sections extends Model
 {
     protected $table='Sections';
+    public $timestamps = false;
     use HasFactory;
 
     protected $fillable = [

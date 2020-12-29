@@ -12,6 +12,7 @@ use App\Models\Attendance;
 class Students extends Model
 {
     protected $table ="Students";
+    public $timestamps = false;
     use HasFactory;
     protected $fillable = [
         'first_name',
