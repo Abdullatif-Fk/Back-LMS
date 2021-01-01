@@ -17,24 +17,34 @@ class Edit_Student extends Controller
     public function update(Request $request, $id)
     {
         $filter=new Filter();
-        error_log($request->input('student_info')['email']);
+        error_log(print_r($request->all(),TRUE));
+
+       
         
          //error_log($request->input('student_info')['section_name']);
          $mail=Students::where('id',$id)->first()->email;
+         error_log($mail);
+         error_log($request->all()['email']);
 
-         if($mail!=$request->email)
+         if($mail!=$request->all()['email'])
          $validator = $filter->index($request);
         else
         $validator = Validator::make($request->all(), [
             
-            'student_info.first_name' => 'required|max:255',
-            'student_info.last_name' => 'required|max:255',
+            'first_name' => 'required|max:255',
+            'last_name' => 'required|max:255',
             'email' => 'required|email',
-            'student_info.phone_number' => 'required|string|max:50',
-            'student_info.section_name' => 'required'
+            'picture'=>'required|image',
+            'phone_number' => 'required|string|max:50',
+        'section_name' => 'required'
             
         ]);
-
+        error_log(0);
+        
+        
+       
+        
+        
         
          
         if ($validator->fails()) {
@@ -47,15 +57,24 @@ class Edit_Student extends Controller
         }
        
         else{
-        $section=Sections::where('name',$request->student_info['section_name']);
+        $section=Sections::where('name',$request->all()['section_name']);
         $section_id=$section->first()->id;
 
+
+        $picture = $request->file('picture');
+        // error_log(print_r($request->file('picture')->getClientOriginalName(),TRUE));
+ 
+         $new_picture=time().$picture->getClientOriginalName();
+         $picture->move(public_path().'/uploads/students/',$new_picture);
+
+
         Students::where('id', $id)
-                ->update(['first_name' => $request->student_info['first_name'],
-                'last_name' => $request->student_info['last_name'],
-                'email'=>$request->email,
-                'phone_number'=>$request->student_info['phone_number'],
+                ->update(['first_name' => $request->all()['first_name'],
+                'last_name' => $request->all()['last_name'],
+                'email'=>$request->all()['email'],
+                'phone_number'=>$request->all()['phone_number'],
                 'section_id'=>$section_id,
+                'picture'=>'uploads/students/'.$new_picture
                         ]
                         );
 

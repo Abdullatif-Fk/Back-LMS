@@ -20,7 +20,9 @@ Route::get('/Admins',[AdminsController::class, 'index']);
 Route::post('/Fetch_Students',[Fetch_Students::class, 'index']);
 Route::delete('/Delete_Student/{id}',[Delete_Student::class, 'destroy']);
 Route::post('/Fetch_Student_By_Id/{id}',[Fetch_Student_By_Id::class , 'edit']);
-Route::put('/Edit_Student/{id}',[Edit_Student::class , 'update']);
+//Route::put('/Edit_Student/{id}',[Edit_Student::class , 'update']);
+
+Route::post('/Edit_Student/{id}',[Edit_Student::class , 'update']);
 Route::post('/Fetch_Sections',[Fetch_Sections::class , 'index']);
 Route::post('/Add_Student',[Add_Student::class , 'store']);
 Route::post('/Fetch_Classes',[Fetch_Classes::class , 'index']);

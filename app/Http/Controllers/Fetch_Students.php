@@ -34,6 +34,8 @@ class Fetch_Students extends Controller
         $student_name=$student->first_name." ".$student->last_name;
         $student_info["id"]=$student->id;
         $student_info["student_name"]=$student_name;
+        $student_info['picture']=$student->picture;
+
         $section_id= $student->section_id;
         
 
