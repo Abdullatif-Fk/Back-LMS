@@ -38,14 +38,9 @@ class Edit_Student extends Controller
             'phone_number' => 'required|string|max:50',
         'section_name' => 'required'
             
-        ]);
-        error_log(0);
+        ]);        
         
-        
-       
-        
-        
-        
+  
          
         if ($validator->fails()) {
             //  Session::flash('error', $validator->messages()->first());
@@ -81,7 +76,7 @@ class Edit_Student extends Controller
 
         return response()->json([
             'status'=> 200,
-            'message'=>$request->all()
+            'message'=>"Edited successfully"
          ], 200); 
          
     }}
