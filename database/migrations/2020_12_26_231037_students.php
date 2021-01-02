@@ -18,7 +18,6 @@ class Students extends Migration
             $table->text('first_name');
             $table->text("last_name");
             $table->string('email');
-            $table->string('password');
             $table->string("phone_number");
             $table->string("picture");
             $table->string('section_id');
