@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Admins extends Model
 { public $timestamps = false;
+    protected $table='Admins';
     use HasFactory;
 
     protected $fillable = [
