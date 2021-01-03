@@ -36,12 +36,9 @@ class Add_Student extends Controller
         $picture = $request->file('picture');
        // error_log(print_r($request->file('picture')->getClientOriginalName(),TRUE));
 
-        $new_picture=time().$picture->getClientOriginalName();
-        error_log(public_path());
+        $new_picture=time().$student->first_name.'-'.$student->last_name;
         $picture->move(public_path().'/uploads/students/',$new_picture);
-        error_log(1);
         $student->picture='uploads/students/'.$new_picture;
-        error_log(1);
 
         $student->save();
         return response()->json([

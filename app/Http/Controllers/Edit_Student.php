@@ -7,7 +7,7 @@ use App\Models\Students;
 use App\Models\Sections;
 use App\Models\Classes;
 use App\MyClasses\Filter;
-
+use File;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -17,12 +17,16 @@ class Edit_Student extends Controller
     public function update(Request $request, $id)
     {
         $filter=new Filter();
-        error_log(print_r($request->all(),TRUE));
-
-       
         
-         //error_log($request->input('student_info')['section_name']);
-         $mail=Students::where('id',$id)->first()->email;
+
+        // $input = file_get_contents('php://input');
+        // $input = json_decode(file_get_contents("php://input"),true);
+        
+        //  parse_str($input, $request);
+        //error_log(print_r($request,TRUE));
+         error_log(print_r($request->all(),TRUE));
+        $student=Students::where('id',$id)->first();
+         $mail=$student->email;
          error_log($mail);
          error_log($request->all()['email']);
 
@@ -58,8 +62,11 @@ class Edit_Student extends Controller
 
         $picture = $request->file('picture');
         // error_log(print_r($request->file('picture')->getClientOriginalName(),TRUE));
- 
-         $new_picture=time().$picture->getClientOriginalName();
+        $new_picture=time().$student->first_name.'-'.$student->last_name;
+        // $new_picture=time().$picture->getClientOriginalName();
+         if(File::exists($student->picture)){
+            File::delete($student->picture);
+        }
          $picture->move(public_path().'/uploads/students/',$new_picture);
 
 
