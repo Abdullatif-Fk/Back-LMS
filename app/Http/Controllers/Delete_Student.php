@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Students;
 
 use Illuminate\Http\Request;
-
+use File;
 class Delete_Student extends Controller
 {
         /**
@@ -16,8 +16,13 @@ class Delete_Student extends Controller
     public function destroy($id)
     {
         $student = Students::where('id',$id);
+
+        if(File::exists($student->first()->picture)){
+            File::delete($student->first()->picture);
+        }
         
         if ($student->count() > 0) {
+            
             $student->delete();
             return response()->json([
                 'status'=> 200,
