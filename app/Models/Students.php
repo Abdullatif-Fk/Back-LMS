@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Attendance;
+use App\Models\Sections;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Sections;
-
-use App\Models\Attendance;
-
 class Students extends Model
 {
-    protected $table ="Students";
+    protected $table = "Students";
     public $timestamps = false;
     use HasFactory;
     protected $fillable = [
@@ -20,15 +18,15 @@ class Students extends Model
         'email',
         'phone_number',
         'picture',
-        'section_id'
+        'section_id',
     ];
     public function attendance()
     {
-        return $this->belongsToMany(Attendance::class, 'Students_Attendances','student_id','attendance_id');
+        return $this->belongsToMany(Attendance::class, 'Students_Attendances', 'student_id', 'attendance_id');
     }
     public function Sections()
     {
-        return $this->belongsTo(Sections::class,'sections_id','id');
+        return $this->belongsTo(Sections::class, 'section_id', 'id');
     }
- 
+
 }
