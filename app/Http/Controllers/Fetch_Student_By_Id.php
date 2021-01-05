@@ -25,7 +25,7 @@ class Fetch_Student_By_Id extends Controller
         $student_info['picture'] = $student->picture;
         $section_id = $student->section_id;
 
-        $section = $student->sections::with('Classes')->first();
+        $section = $student->sections::with('Classes')->where('id', $section_id)->get()->first();
         if ($section->count() > 0) {
             $class_id = $section->classes->id;
             $class_name = $section->classes->name;
@@ -37,7 +37,7 @@ class Fetch_Student_By_Id extends Controller
         }
 
         $student_info["section_id"] = $section_id;
-        $student_info["section_name"] = $section->first()->name;
+        $student_info["section_name"] = $section->name;
         $student_info["class_name"] = $class_name;
 
         $student_info["class_id"] = $class_id;

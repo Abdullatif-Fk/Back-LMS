@@ -19,6 +19,12 @@ class Fetch_Sections extends Controller
             $myarray['section_name'] = $section->name;
             $myarray['class_id'] = $section->class_id;
             //now
+            if ($section->classes->name == 'undefined') {
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Please try again later",
+                ], 400);
+            }
 
             $myarray['class_name'] = $section->classes->name;
 
