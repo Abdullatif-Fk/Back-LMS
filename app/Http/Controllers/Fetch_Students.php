@@ -27,7 +27,7 @@ class Fetch_Students extends Controller
         //return $students[0]->sections;
 
         foreach ($students as $student) {
-
+            //return $students;
             $student_info = [];
             $student_name = $student->first_name . " " . $student->last_name;
             $student_info["id"] = $student->id;
@@ -35,7 +35,7 @@ class Fetch_Students extends Controller
             $student_info['picture'] = $student->picture;
 
             $section_id = $student->section_id;
-            $section = $student->sections::with('Classes')->get();
+            $section = $student->sections::with('Classes')->where('id', $section_id)->get();
             //before , kel l esmon section ken esmon class
             // $class = Sections::where('id', $section_id);
             if ($section->count() > 0) {

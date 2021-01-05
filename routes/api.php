@@ -8,6 +8,7 @@ use App\Http\Controllers\Fetch_Classes;
 use App\Http\Controllers\Fetch_Sections;
 use App\Http\Controllers\Fetch_Students;
 use App\Http\Controllers\Fetch_Student_By_Id;
+use App\Http\Controllers\SectionsController;
 use Illuminate\Http\Request;
 
 //Classes
@@ -28,3 +29,4 @@ Route::post('/Add_Student', [Add_Student::class, 'store']);
 Route::get('/Fetch_Classes', [Fetch_Classes::class, 'index']);
 
 Route::resource('Classes', ClassesController::class);
+Route::resource('Sections', SectionsController::class);
