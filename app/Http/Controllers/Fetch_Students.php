@@ -5,10 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Classes;
 use App\Models\Sections;
 use App\Models\Students;
-use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Collection;
 
 class Fetch_Students extends Controller
 {
@@ -62,7 +58,7 @@ class Fetch_Students extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => $this->paginate($students_info),
+            'message' => $students_info,
         ], 200);
 
         //return Sections::with('classes')->get();
@@ -73,71 +69,6 @@ class Fetch_Students extends Controller
         //return Students::with('attendance')->get();
         //return Students_Attendances::all();
 
-    }
-    public function paginate($items, $perPage = 5, $page = null, $options = [])
-    {
-
-        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
-
-        $items = $items instanceof Collection ? $items : Collection::make($items);
-
-        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
 }
