@@ -9,6 +9,10 @@ use App\Http\Controllers\Fetch_Sections;
 use App\Http\Controllers\Fetch_Students;
 use App\Http\Controllers\Fetch_Student_By_Id;
 use App\Http\Controllers\SectionsController;
+
+use App\Http\Controllers\AdminsController;
+
+
 use Illuminate\Http\Request;
 
 //Classes
@@ -30,3 +34,11 @@ Route::get('/Fetch_Classes', [Fetch_Classes::class, 'index']);
 
 Route::resource('Classes', ClassesController::class);
 Route::resource('Sections', SectionsController::class);
+
+
+Route::post('/Add_Admin', [AdminsController::class, 'store']);
+Route::post('/Fetch_Admins', [AdminsController::class, 'index']);
+Route::delete('/Delete_Admin/{id}', [AdminsController::class, 'destroy']);
+Route::post('/Edit_Admin/{id}', [AdminsController::class, 'update']);
+
+
