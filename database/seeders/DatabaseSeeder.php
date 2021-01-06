@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\AttendanceSeeder;
 use Illuminate\Database\Seeder;
-use Database\Seeders\AdminTableSeeder;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -13,6 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(AdminTableSeeder::class);
+        $this->call(AttendanceSeeder::class);
     }
 }

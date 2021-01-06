@@ -9,6 +9,7 @@ use App\Http\Controllers\Fetch_Sections;
 use App\Http\Controllers\Fetch_Students;
 use App\Http\Controllers\Fetch_Student_By_Id;
 use App\Http\Controllers\SectionsController;
+use App\Http\Controllers\Students_AttendanceController;
 
 use App\Http\Controllers\AdminsController;
 
@@ -34,6 +35,7 @@ Route::get('/Fetch_Classes', [Fetch_Classes::class, 'index']);
 
 Route::resource('Classes', ClassesController::class);
 Route::resource('Sections', SectionsController::class);
+Route::resource('Students_Attendance', Students_AttendanceController::class);
 
 
 Route::post('/Add_Admin', [AdminsController::class, 'store']);
