@@ -204,6 +204,7 @@ class Students_AttendanceController extends Controller
             if ($class_id_error) {
 
                 if ($student_id_error) {
+                    error_log(11);
                     $all = DB::table('Students_Attendances')->get();
 
                     $ALL = [];

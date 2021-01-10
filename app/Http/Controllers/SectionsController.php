@@ -8,6 +8,7 @@ use App\Models\Students;
 use App\MyClasses\Section_Filter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class SectionsController extends Controller
 {
@@ -58,6 +59,18 @@ class SectionsController extends Controller
     public function store(Request $request)
     {
         $filter = new Section_Filter();
+        $validator1 = Validator::make($request->all(), [
+            'name' => Rule::unique('Sections')->where(function ($query) use ($request) {
+                return $query->where('class_id', $request->all()['class_id']);
+            }),
+        ]);
+        if ($validator1->fails()) {
+            error_log(11);
+            return response()->json([
+                'status' => 400,
+                'message' => $validator1->messages()->first(),
+            ], 400);
+        }
         if ($request->all()['name'] === "undefined" || empty($request['name'])) {
             return response()->json([
                 'status' => 400,
@@ -171,6 +184,18 @@ class SectionsController extends Controller
 
         if ($name != $request->all()['name']) {
             $validator = $filter->index($request);
+            $validator1 = Validator::make($request->all(), [
+                'name' => Rule::unique('Sections')->where(function ($query) use ($request) {
+                    return $query->where('class_id', $request->all()['class_id']);
+                }),
+            ]);
+            if ($validator1->fails()) {
+                error_log(11);
+                return response()->json([
+                    'status' => 400,
+                    'message' => $validator1->messages()->first(),
+                ], 400);
+            }
         } else {
             $validator = Validator::make($request->all(), [
 
