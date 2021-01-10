@@ -39,3 +39,4 @@ Route::post('/Add_Admin', [AdminsController::class, 'store']);
 Route::post('/Fetch_Admins', [AdminsController::class, 'index']);
 Route::delete('/Delete_Admin/{id}', [AdminsController::class, 'destroy']);
 Route::post('/Edit_Admin/{id}', [AdminsController::class, 'update']);
+Route::get('/Fetch_Admin_By_Id/{id}', [AdminsController::class, 'show']);
