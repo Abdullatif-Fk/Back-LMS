@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\MyClasses\adminFilter;
 use App\Models\Admins;
-use Illuminate\Support\Facades\Validator;
-
+use App\MyClasses\adminFilter;
 use File;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AdminsController extends Controller
 {
@@ -27,6 +26,8 @@ class AdminsController extends Controller
             $admin_name = $admin->first_name . " " . $admin->last_name;
             $admin_info["id"] = $admin->id;
             $admin_info["admin_name"] = $admin_name;
+            $admin_info["phone_number"] = $admin->phone_number;
+            $admin_info["email"] = $admin->email;
             $admin_info['picture'] = $admin->picture;
             array_push($admins_info, $admin_info);
         }
@@ -87,13 +88,13 @@ class AdminsController extends Controller
         if ($this->check("password", $request)) {
             return $this->check("password", $request);
         }
-
+        if ($this->check("repeat_password", $request)) {
+            return $this->check("repeat_password", $request);
+        }
 
         if ($this->check("phone_number", $request)) {
             return $this->check("phone_number", $request);
         }
-
-        
 
         $validator = $filter->index($request);
         if ($validator->fails()) {
@@ -103,14 +104,23 @@ class AdminsController extends Controller
             ], 400);
         }
 
+        if ($request->all()['password'] != $request->all()['repeat_password']) {
+            return response()->json([
+                'status' => 400,
+                'message' => "Password and verify password must be the same",
+            ], 400);
+        }
+
         $admin = new Admins();
         $admin->first_name = $request->all()['first_name'];
         $admin->last_name = $request->all()['last_name'];
         $admin->email = $request->input('email');
-        $admin->password = $request->input('password');
+
+        error_log($request->input('password'));
+        $admin->password = bcrypt($request->input('password'));
         $admin->phone_number = $request->all()['phone_number'];
         $picture = $request->file('picture');
-        error_log(print_r($request->file('picture')->getClientOriginalName(),TRUE));
+        error_log(print_r($request->file('picture')->getClientOriginalName(), true));
         $new_picture = time() . $admin->first_name . '-' . $admin->last_name;
         $picture->move(public_path() . '/uploads/admins/', $new_picture);
         $admin->picture = 'uploads/admins/' . $new_picture;
@@ -129,7 +139,14 @@ class AdminsController extends Controller
      */
     public function show($id)
     {
-        //
+
+        $admin = Admins::where('id', $id)->first();
+
+        return response()->json([
+            'status' => 200,
+            'message' => $admin,
+        ], 200);
+
     }
 
     /**
@@ -153,7 +170,7 @@ class AdminsController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $filter = new adminFilter();
+
         if ($this->check("first_name", $request)) {
             return $this->check("first_name", $request);
         }
@@ -170,14 +187,35 @@ class AdminsController extends Controller
             return $this->check("phone_number", $request);
         }
 
-        if ($this->check("password", $request)) {
-            return $this->check("password", $request);
+        // if ($this->check("new_password", $request)) {
+        //     return $this->check("password", $request);
+        // }
+        if ($this->check("old_password", $request)) {
+            return $this->check("old_password", $request);
         }
+
         $admin = Admins::where('id', $id)->first();
         $mail = $admin->email;
+        $pass = $admin->password;
+
+        if (!Hash::check($request->all()['old_password'], $pass)) {
+            return response()->json([
+                'status' => 400,
+                'message' => "Incorrect Password!",
+            ], 400);
+        }
 
         if ($mail != $request->all()['email']) {
-            $validator = $filter->index($request);
+            $validator = Validator::make($request->all(), [
+
+                'first_name' => 'required|max:255',
+                'last_name' => 'required|max:255',
+                'email' => 'required|Unique:Admins|email',
+                'picture' => 'required|image',
+                'phone_number' => 'required|string|max:50',
+                'old_password' => 'required',
+
+            ]);
         } else {
             $validator = Validator::make($request->all(), [
 
@@ -186,7 +224,7 @@ class AdminsController extends Controller
                 'email' => 'required|email',
                 'picture' => 'required|image',
                 'phone_number' => 'required|string|max:50',
-                'password' => 'required',
+                'old_password' => 'required',
 
             ]);
         }
@@ -197,6 +235,16 @@ class AdminsController extends Controller
                 'message' => $validator->messages()->first(),
             ], 400);
         } else {
+            if ($request->all()['new_password'] != "undefined"
+                || $request->all()['repeat_new_password'] != "undefined") {
+                if ($request->all()['new_password'] != $request->all()['repeat_new_password']) {
+                    return response()->json([
+                        'status' => 400,
+                        'message' => "New password and repeat password must be the same",
+                    ], 400);
+                }
+
+            }
 
             $picture = $request->file('picture');
             // error_log(print_r($request->file('picture')->getClientOriginalName(),TRUE));
@@ -206,16 +254,27 @@ class AdminsController extends Controller
                 File::delete($admin->picture);
             }
             $picture->move(public_path() . '/uploads/admins/', $new_picture);
-
-            Admins::where('id', $id)
-                ->update(['first_name' => $request->all()['first_name'],
-                    'last_name' => $request->all()['last_name'],
-                    'email' => $request->all()['email'],
-                    'phone_number' => $request->all()['phone_number'],
-                    'password' => $request->all()['password'],
-                    'picture' => 'uploads/admins/' . $new_picture,
-                ]
-                );
+            if ($request->all()['new_password'] == "undefined") {
+                Admins::where('id', $id)
+                    ->update(['first_name' => $request->all()['first_name'],
+                        'last_name' => $request->all()['last_name'],
+                        'email' => $request->all()['email'],
+                        'phone_number' => $request->all()['phone_number'],
+                        'password' => bcrypt($request->all()['old_password']),
+                        'picture' => 'uploads/admins/' . $new_picture,
+                    ]
+                    );
+            } else {
+                Admins::where('id', $id)
+                    ->update(['first_name' => $request->all()['first_name'],
+                        'last_name' => $request->all()['last_name'],
+                        'email' => $request->all()['email'],
+                        'phone_number' => $request->all()['phone_number'],
+                        'password' => bcrypt($request->all()['new_password']),
+                        'picture' => 'uploads/admins/' . $new_picture,
+                    ]
+                    );
+            }
 
             return response()->json([
                 'status' => 200,
@@ -234,29 +293,24 @@ class AdminsController extends Controller
     public function destroy($id)
     {
         //
-        $admin = Admins::where('id',$id);
+        $admin = Admins::where('id', $id);
 
-        if(File::exists($admin->first()->picture)){
+        if (File::exists($admin->first()->picture)) {
             File::delete($admin->first()->picture);
         }
-        
+
         if ($admin->count() > 0) {
-            
+
             $admin->delete();
             return response()->json([
-                'status'=> 200,
-                'message'=>"Deleted successfully"
-             ], 200); 
-         }
-         else
-         {
+                'status' => 200,
+                'message' => "Deleted successfully",
+            ], 200);
+        } else {
             return response()->json([
-                'status'=> 400,
-                'message'=>"Error"
-             ], 400); 
-         }
+                'status' => 400,
+                'message' => "Error",
+            ], 400);
+        }
     }
-    }
-
-
-
+}

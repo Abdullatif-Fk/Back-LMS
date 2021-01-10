@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sections;
 use App\Models\Students;
 use App\MyClasses\Filter;
 use File;
@@ -43,8 +42,8 @@ class Edit_Student extends Controller
             return $this->check("phone_number", $request);
         }
 
-        if ($this->check("section_name", $request)) {
-            return $this->check("section_name", $request);
+        if ($this->check("section_id", $request)) {
+            return $this->check("section_id", $request);
         }
         $student = Students::where('id', $id)->first();
         $mail = $student->email;
@@ -59,7 +58,7 @@ class Edit_Student extends Controller
                 'email' => 'required|email',
                 'picture' => 'required|image',
                 'phone_number' => 'required|string|max:50',
-                'section_name' => 'required',
+                'section_id' => 'required',
 
             ]);
         }
@@ -70,8 +69,8 @@ class Edit_Student extends Controller
                 'message' => $validator->messages()->first(),
             ], 400);
         } else {
-            $section = Sections::where('name', $request->all()['section_name']);
-            $section_id = $section->first()->id;
+            // $section = Sections::where('name', $request->all()['section_id']);
+            $section_id = $request->all()['section_id'];
             $picture = $request->file('picture');
             // error_log(print_r($request->file('picture')->getClientOriginalName(),TRUE));
             $new_picture = time() . $student->first_name . '-' . $student->last_name;

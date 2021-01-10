@@ -14,6 +14,7 @@ class Fetch_Classes extends Controller
         $myarray = [];
         foreach ($classes as $class) {
             $myarray['class_name'] = $class->name;
+            $myarray['class_id'] = $class->id;
             array_push($myfinalarray, $myarray);
         }
         // error_log(print_r($sections));

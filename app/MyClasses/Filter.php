@@ -18,7 +18,7 @@ class Filter
             'email' => 'required|email|unique:Students',
             'picture' => 'required|image',
             'phone_number' => 'required|string|max:50',
-            'section_name' => 'required',
+            'section_id' => 'required',
 
         ]);
     }

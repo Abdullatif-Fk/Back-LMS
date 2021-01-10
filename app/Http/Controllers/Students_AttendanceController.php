@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Students;
 use App\Models\Students_Attendances;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -156,40 +157,72 @@ class Students_AttendanceController extends Controller
         //4- if for all days in specefic class and section , required:class_id,section_id
         //5- if for a day in specefi class and section :  class_id,section_id,date
         //6- if for a day in specefic class :  class_id,date
-        error_log(11);
-        $validator = Validator::make($request->all(), [
-            'student_id' => 'required|max:255',
-            'class_id' => 'required|max:255',
-            'section_id' => 'required|max:255',
-            'date_from' => 'required|max:255',
+        //7- all days ,all students , all classes
 
-        ]);
+        error_log(print_r($request->all(), true));
+        // $validator = Validator::make($request->all(), [
+        //     'student_id' => 'required|max:255',
+        //     'class_id' => 'required|max:255',
+        //     'section_id' => 'required|max:255',
+        //     'date_from' => 'required|max:255',
 
-        if ($validator->fails()) {
+        // ]);
+
+        if ($request->all()['class_id'] == "undefined" || $request->all()['section_id'] == "undefined" || $request->all()['date_from'] == "undefined" || $request->all()['student_id'] == "undefined") {
+            // $date_error = $class_id_error = $section_id_error = $student_id_error = 0;
+            // if ($validator->errors()->get('class_id')) {
+            //     $class_id_error = $validator->errors()->get('class_id')[0] == 'The class id field is required.';
+            // }
+
+            // if ($validator->errors()->get('section_id')) {
+            //     $section_id_error = $validator->errors()->get('section_id')[0] == 'The section id field is required.';
+            // }
+
+            // if ($validator->errors()->get('date_from')) {
+            //     $date_error = $validator->errors()->get('date_from')[0] == 'The date from field is required.';
+            // }
+
+            // if ($validator->errors()->get('student_id')) {
+            //     $student_id_error = $validator->errors()->get('student_id')[0] == 'The student id field is required.';
+            // }
             $date_error = $class_id_error = $section_id_error = $student_id_error = 0;
-            if ($validator->errors()->get('class_id')) {
-                $class_id_error = $validator->errors()->get('class_id')[0] == 'The class id field is required.';
-            }
 
-            if ($validator->errors()->get('section_id')) {
-                $section_id_error = $validator->errors()->get('section_id')[0] == 'The section id field is required.';
+            if ($request->all()['class_id'] == "undefined") {
+                $class_id_error = 1;
             }
-
-            if ($validator->errors()->get('date_from')) {
-                $date_error = $validator->errors()->get('date_from')[0] == 'The date from field is required.';
+            if ($request->all()['section_id'] == "undefined") {
+                $section_id_error = 1;
             }
-
-            if ($validator->errors()->get('student_id')) {
-                $student_id_error = $validator->errors()->get('student_id')[0] == 'The student id field is required.';
+            if ($request->all()['date_from'] == "undefined") {
+                $date_error = 1;
             }
+            if ($request->all()['student_id'] == "undefined") {
 
-            //1 and 2
+                $student_id_error = 1;
+            }
+            //1 2 and 7
             if ($class_id_error) {
+
                 if ($student_id_error) {
+                    error_log(11);
+                    $all = DB::table('Students_Attendances')->get();
+
+                    $ALL = [];
+                    foreach ($all as $al) {
+                        $std = Students::where('id', $al->student_id)->first();
+
+                        array_push($ALL, ['id' => $al->id,
+                            'date' => $al->date,
+                            'student_id' => $al->student_id,
+                            'attendance_id' => $al->attendance_id,
+                            'name' => $std->first_name]);
+
+                    }
+
                     return response()->json([
-                        'status' => 400,
-                        'message' => "Error ! ",
-                    ], 400);
+                        'status' => 200,
+                        'message' => [$ALL],
+                    ], 200);
                 }
 
                 $student = Students_Attendances::where("student_id", $request->all()['student_id']);
@@ -205,10 +238,13 @@ class Students_AttendanceController extends Controller
                 }
                 //2
                 else {
+                    error_log(11);
 
                     $student_date = $student->where('date', ">=", $request->all()['date_from'])->where('date', "<=", $request->all()['date_to'])->get();
+                    error_log(print_r($student_date, true));
+
                     return response()->json([
-                        'status' => 400,
+                        'status' => 200,
                         'message' => [$student_date],
                     ]);
 
@@ -237,6 +273,7 @@ class Students_AttendanceController extends Controller
 
                     //3
                     if ($date_error) {
+                        error_log(11);
                         $filter_students_attendance = [];
                         foreach ($filter_students as $filter_student) {
                             //$att_array_for_one_student = [];
@@ -255,6 +292,11 @@ class Students_AttendanceController extends Controller
 
                             //array_push($filter_students_attendance, $att_array_for_one_student);
                         }
+                        if (!count($filter_students_attendance)) {
+                            array_push($filter_students_attendance, []);
+
+                        }
+
                         return response()->json([
                             'status' => 200,
                             'message' => $filter_students_attendance,
@@ -262,6 +304,7 @@ class Students_AttendanceController extends Controller
                     }
                     //6
                     else {
+
                         $filter_students_attendance = [];
                         foreach ($filter_students as $filter_student) {
                             //$att_array_for_one_student = [];
