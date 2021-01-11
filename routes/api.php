@@ -11,6 +11,7 @@ use App\Http\Controllers\Fetch_Students;
 use App\Http\Controllers\Fetch_Student_By_Id;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\Students_AttendanceController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 
 //Classes
@@ -40,3 +41,23 @@ Route::post('/Fetch_Admins', [AdminsController::class, 'index']);
 Route::delete('/Delete_Admin/{id}', [AdminsController::class, 'destroy']);
 Route::post('/Edit_Admin/{id}', [AdminsController::class, 'update']);
 Route::get('/Fetch_Admin_By_Id/{id}', [AdminsController::class, 'show']);
+
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
+
+// Route::group(
+//     [
+//         'middleware' => 'api',
+//         'namespace'  => 'App\Http\Controllers',
+//         'prefix'     => 'auth',
+//     ],
+//     function ($router) {
+//         Route::post('login', 'AuthController@login');
+//         Route::post('register', 'AuthController@register');
+//         Route::post('logout', 'AuthController@logout');
+//         Route::get('profile', 'AuthController@profile');
+//         Route::post('refresh', 'AuthController@refresh');
+//     }
+// );
+
