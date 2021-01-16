@@ -10,27 +10,30 @@
 // }
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Admins;
+
+
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $user = User::create([
-             'name' => $request->name,
+        $admin = Admins::create([
+             'first_name' => $request->first_name,
+             'last_name' => $request->last_name,
              'email'    => $request->email,
              'password' => $request->password,
          ]);
 
-        $token = auth()->login($user);
+        $token = auth()->login($admin);
 
         return $this->respondWithToken($token);
     }
 
     public function login()
     {
-        $credentials = request(['email', 'password']);
+        $credentials = request(['first_name','last_name','email', 'password','phone_number','picture']);
 
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
@@ -53,7 +56,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type'   => 'bearer',
             'expires_in'   => auth()->factory()->getTTL() * 60,
-            'user' => auth()-> user()
+            'admin' => auth()-> user()
         ]);
     }
 }
