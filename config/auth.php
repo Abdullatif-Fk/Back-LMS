@@ -15,7 +15,7 @@ return [
 
     'defaults' => [
         'guard' => 'jwt',
-        'passwords' => 'users',
+        'passwords' => 'admins',
     ],
 
     /*
@@ -43,12 +43,12 @@ return [
 
         'api' => [
             'driver' => 'token',
-            'provider' => 'users',
+            'provider' => 'admins',
             'hash' => false,
         ],
         'jwt' => [
             'driver' => 'jwt',
-            'provider' => 'users',
+            'provider' => 'admins',
         ]
     ],
 
@@ -69,17 +69,31 @@ return [
     |
     */
 
-    'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
-
+    // 'providers' => [
+    //     'users' => [
+    //         'driver' => 'eloquent',
+    //         'model' => App\Models\User::class,
+    //     ],
+       
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
-    ],
+    // ],
+    'providers' => [
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admins::class,
+        ],
+       
+        // 'users' => [
+        //     'driver' => 'database',
+        //     'table' => 'users',
+        // ],
+    ],    
+
+
+
 
     /*
     |--------------------------------------------------------------------------
