@@ -11,35 +11,45 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admins;
-
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $admin = Admins::create([
-             'first_name' => $request->first_name,
-             'last_name' => $request->last_name,
-             'email'    => $request->email,
-             'password' => $request->password,
-         ]);
+        error_log(print_r($request->all(), true));
+        error_log($request->all()['first_name']);
 
+        $admin = Admins::create([
+            'first_name' => $request->all()['first_name'],
+            'last_name' => $request->all()['last_name'],
+            'email' => $request->all()['email'],
+            'password' => $request->all()['password'],
+        ]);
+
+        error_log(12);
         $token = auth()->login($admin);
+        error_log($token);
 
         return $this->respondWithToken($token);
     }
 
     public function login()
     {
-        $credentials = request(['first_name','last_name','email', 'password','phone_number','picture']);
+        // error_log(print_r($request->all(), true));
 
-        if (! $token = auth()->attempt($credentials)) {
+        $credentials = request(['email', 'password']);
+        // error_log(print_r(Auth::attempt($credentials), true));
+
+        if (!$token = auth()->attempt($credentials)) {
+
             return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        } else {
+            error_log(print_r($credentials, true));
 
-        return $this->respondWithToken($token);
+            return $this->respondWithToken($token);
+        }
     }
 
     public function logout()
@@ -51,12 +61,16 @@ class AuthController extends Controller
 
     protected function respondWithToken($token)
     {
+        error_log($token);
+        error_log(print_r(auth()->user(), true));
+
         // $user = auth()-> user();
         return response()->json([
+            'status' => 200,
             'access_token' => $token,
-            'token_type'   => 'bearer',
-            'expires_in'   => auth()->factory()->getTTL() * 60,
-            'admin' => auth()-> user()
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60,
+            'admin' => auth()->user(),
         ]);
     }
 }
