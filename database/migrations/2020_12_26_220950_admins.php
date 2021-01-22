@@ -20,7 +20,7 @@ class Admins extends Migration
             $table->string('email');
             $table->string('password');
             $table->string("phone_number");
-            $table->string("picture");
+            $table->string("picture")->nullable();
         });
     }
 
