@@ -19,12 +19,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+    
 });
 
 Route::post('/Fetch_Students', [Fetch_Students::class, 'index']);
 Route::delete('/Delete_Student/{id}', [Delete_Student::class, 'destroy']);
 Route::post('/Fetch_Student_By_Id/{id}', [Fetch_Student_By_Id::class, 'edit']);
-//Route::put('/Edit_Student/{id}',[Edit_Student::class , 'update']);
+Route::put('/Edit_Student/{id}',[Edit_Student::class , 'update']);
 
 Route::post('/Edit_Student/{id}', [Edit_Student::class, 'update']);
 Route::get('/Fetch_Sections', [Fetch_Sections::class, 'index']);
