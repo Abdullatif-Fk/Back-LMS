@@ -28,7 +28,6 @@ class AuthController extends Controller
             'password' => $request->all()['password'],
         ]);
 
-        error_log(12);
         $token = auth()->login($admin);
         error_log($token);
 
@@ -40,11 +39,11 @@ class AuthController extends Controller
         // error_log(print_r($request->all(), true));
 
         $credentials = request(['email', 'password']);
-        // error_log(print_r(Auth::attempt($credentials), true));
-
+        error_log(print_r(Auth::attempt($credentials), true));
+        error_log(print_r($credentials, true));
         if (!$token = auth()->attempt($credentials)) {
 
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Incorrect password or username'], 401);
         } else {
             error_log(print_r($credentials, true));
 

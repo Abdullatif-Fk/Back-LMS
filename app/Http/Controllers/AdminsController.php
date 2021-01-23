@@ -117,7 +117,9 @@ class AdminsController extends Controller
         $admin->email = $request->input('email');
 
         error_log($request->input('password'));
-        $admin->password = bcrypt($request->input('password'));
+        // $admin->password = bcrypt($request->input('password'));
+        $admin->password = $request->input('password');
+
         $admin->phone_number = $request->all()['phone_number'];
         $picture = $request->file('picture');
         error_log(print_r($request->file('picture')->getClientOriginalName(), true));
@@ -125,6 +127,8 @@ class AdminsController extends Controller
         $picture->move(public_path() . '/uploads/admins/', $new_picture);
         $admin->picture = 'uploads/admins/' . $new_picture;
         $admin->save();
+
+        auth()->login($admin);
         return response()->json([
             'status' => 200,
             'message' => "New Admin added",
